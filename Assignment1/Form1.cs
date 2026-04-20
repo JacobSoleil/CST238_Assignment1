@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Windows;
-using System.Diagnostics;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Assignment1
 {
@@ -159,8 +160,8 @@ namespace Assignment1
             {
                 case DialogResult.Cancel:
                     return DialogResult.Cancel;
-                case DialogResult.OK:
-                    return saveBitmap();
+                case DialogResult.Yes:
+                    return saveAs();
                 case DialogResult.No:
                     return DialogResult.No;
                 default:
@@ -168,8 +169,8 @@ namespace Assignment1
             }
         }
 
-        // Utility that saves the bitmap, returning true if successful and false otherwise
-        private DialogResult saveBitmap()
+        // Utility that gets a new file name before saving
+        private DialogResult saveAs()
         {
             SaveFileDialog saveDialog = new SaveFileDialog();
             saveDialog.Title = "Save Your Work";
@@ -177,25 +178,29 @@ namespace Assignment1
             saveDialog.Filter = "Bitmaps|*.bmp|All files|*.*";
             if (saveDialog.ShowDialog() == DialogResult.OK)
             {
-                System.IO.Stream saveStream = saveDialog.OpenFile();
-                if (saveStream != null)
-                {
-                    try
-                    {
-                        drawingBmp.Save(saveStream, ImageFormat.Bmp);
-                        saveName = saveDialog.FileName;
-                        Trace.WriteLine("Bitmap successfully saved to " + saveName);
-                        this.Text = "CST 238 Drawing - " + saveName;
-                        return DialogResult.OK;
-                    }
-                    catch (Exception ex)
-                    {
-                        Trace.WriteLine("Bitmap failed to save to " + saveStream.ToString());
-                        Trace.WriteLine("Error message: " + ex.Message);
-                    }
-                }
+                saveName = saveDialog.FileName;
+                return saveBitmap();
             }
             return DialogResult.Cancel;
+        }
+
+        // Utility that saves the bitmap with the stored save name
+        private DialogResult saveBitmap()
+        {
+            try
+            {
+                drawingBmp.Save(saveName, ImageFormat.Bmp);
+                isUnsaved = false;
+                Trace.WriteLine("Bitmap successfully saved to " + saveName);
+                this.Text = "CST 238 Drawing - " + saveName;
+                return DialogResult.OK;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine("Bitmap failed to save to " + saveName);
+                Trace.WriteLine("Error message: " + ex.Message);
+                return DialogResult.Cancel;
+            }
         }
 
         // Tool selection options
@@ -251,11 +256,17 @@ namespace Assignment1
         // File menu options
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
             if (isUnsaved)
             {
                 if (saveWorkMessage("Save before opening new file?") == DialogResult.Cancel)
                     return;
+            }
+
+            drawingBmp.Dispose();
+            drawingBmp = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
+            using (Graphics g = Graphics.FromImage(drawingBmp))
+            {
+                g.Clear(Color.White);
             }
         }
 
@@ -266,12 +277,18 @@ namespace Assignment1
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (isUnsaved)
+            {
+                if (saveName == null)
+                    saveAs();
+                else
+                    saveBitmap();
+            }
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveBitmap();
+            saveAs();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
