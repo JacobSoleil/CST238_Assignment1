@@ -75,32 +75,37 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.newToolStripMenuItem.Text = "New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Open...";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveAsToolStripMenuItem.Text = "Save As...";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // toolToolStripMenuItem
             // 
@@ -115,21 +120,21 @@
             // rectangleToolStripMenuItem
             // 
             this.rectangleToolStripMenuItem.Name = "rectangleToolStripMenuItem";
-            this.rectangleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rectangleToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.rectangleToolStripMenuItem.Text = "Rectangle";
             this.rectangleToolStripMenuItem.Click += new System.EventHandler(this.rectangleToolStripMenuItem_Click);
             // 
             // ellipseToolStripMenuItem
             // 
             this.ellipseToolStripMenuItem.Name = "ellipseToolStripMenuItem";
-            this.ellipseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ellipseToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.ellipseToolStripMenuItem.Text = "Ellipse";
             this.ellipseToolStripMenuItem.Click += new System.EventHandler(this.ellipseToolStripMenuItem_Click);
             // 
             // lineToolStripMenuItem
             // 
             this.lineToolStripMenuItem.Name = "lineToolStripMenuItem";
-            this.lineToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.lineToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.lineToolStripMenuItem.Text = "Line";
             this.lineToolStripMenuItem.Click += new System.EventHandler(this.lineToolStripMenuItem_Click);
             // 
@@ -148,35 +153,35 @@
             // blackToolStripMenuItem
             // 
             this.blackToolStripMenuItem.Name = "blackToolStripMenuItem";
-            this.blackToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.blackToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
             this.blackToolStripMenuItem.Text = "Black";
             this.blackToolStripMenuItem.Click += new System.EventHandler(this.blackToolStripMenuItem_Click);
             // 
             // whiteToolStripMenuItem
             // 
             this.whiteToolStripMenuItem.Name = "whiteToolStripMenuItem";
-            this.whiteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.whiteToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
             this.whiteToolStripMenuItem.Text = "White";
             this.whiteToolStripMenuItem.Click += new System.EventHandler(this.whiteToolStripMenuItem_Click);
             // 
             // redToolStripMenuItem
             // 
             this.redToolStripMenuItem.Name = "redToolStripMenuItem";
-            this.redToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.redToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
             this.redToolStripMenuItem.Text = "Red";
             this.redToolStripMenuItem.Click += new System.EventHandler(this.redToolStripMenuItem_Click);
             // 
             // blueToolStripMenuItem
             // 
             this.blueToolStripMenuItem.Name = "blueToolStripMenuItem";
-            this.blueToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.blueToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
             this.blueToolStripMenuItem.Text = "Blue";
             this.blueToolStripMenuItem.Click += new System.EventHandler(this.blueToolStripMenuItem_Click);
             // 
             // greenToolStripMenuItem
             // 
             this.greenToolStripMenuItem.Name = "greenToolStripMenuItem";
-            this.greenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.greenToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
             this.greenToolStripMenuItem.Text = "Green";
             this.greenToolStripMenuItem.Click += new System.EventHandler(this.greenToolStripMenuItem_Click);
             // 
