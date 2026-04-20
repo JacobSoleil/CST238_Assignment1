@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
-using System.Diagnostics;
-using System.Drawing.Drawing2D;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Assignment1
 {
@@ -60,8 +63,12 @@ namespace Assignment1
         private Tool drawingTool;   // Currently-selected drawing tool
         private Brush drawingBrush; // Currently-selected brush color (converted to pen in Linetool)
         private Bitmap drawingBmp;  // in-memory representation of canvas
+
         private bool userIsDrawing; // whether user is currently dragging the mouse
         private Point p1, p2;       // start and end point for drawing
+
+        private string saveName;    // Name of the file currently being worked on
+        private bool isUnsaved;     // Is there unsaved work?
 
         public Form1()
         {
@@ -76,9 +83,15 @@ namespace Assignment1
                 g.Clear(Color.White);
             }
 
+            this.MaximumSize = new Size(800, 500);  // Set to avoid invalid sizes
+            this.MinimumSize = new Size(50, 50);
+
             userIsDrawing = false;
             p1 = new Point(0, 0);
             p2 = new Point(0, 0);
+
+            isUnsaved = false;
+            saveName = null;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -98,7 +111,7 @@ namespace Assignment1
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
-            Trace.WriteLine("Mouse moved " + e.X + ", " + e.Y);
+            //Trace.WriteLine("Mouse moved " + e.X + ", " + e.Y);
 
             if (userIsDrawing)
             {
@@ -122,6 +135,8 @@ namespace Assignment1
                 {
                     drawingTool.Draw(g, drawingBrush, p1, p2);
                 }
+
+                isUnsaved = true;
             }
         }
 
@@ -134,17 +149,110 @@ namespace Assignment1
             }
         }
 
+        //Utility that displays a warning if opening a new file or exiting while unsaved
+        private DialogResult saveWorkMessage(string message)
+        {
+            switch (MessageBox.Show(message,
+                                   "Save Your Work",
+                                   MessageBoxButtons.YesNoCancel,
+                                   MessageBoxIcon.Warning,
+                                   MessageBoxDefaultButton.Button1))
+            {
+                case DialogResult.Cancel:
+                    return DialogResult.Cancel;
+                case DialogResult.Yes:
+                    if (saveName == null)
+                        return saveAs();
+                    else
+                        return saveBitmap();
+                case DialogResult.No:
+                    return DialogResult.No;
+                default:
+                    return DialogResult.Cancel;
+            }
+        }
+
+        // Utility that gets a new file name before saving
+        private DialogResult saveAs()
+        {
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Title = "Save As";
+            saveDialog.DefaultExt = "bmp";
+            saveDialog.Filter = "Bitmaps|*.bmp|All files|*.*";
+            if (saveDialog.ShowDialog() == DialogResult.OK)
+            {
+                saveName = saveDialog.FileName;
+                return saveBitmap();
+            }
+            return DialogResult.Cancel;
+        }
+
+        // Utility that saves the bitmap with the stored save name
+        private DialogResult saveBitmap()
+        {
+            try
+            {
+                Trace.WriteLine(saveName);
+                drawingBmp.Save(saveName, ImageFormat.Bmp);
+                isUnsaved = false;
+                Trace.WriteLine("Bitmap successfully saved to " + saveName);
+                this.Text = "CST 238 Drawing - " + saveName;
+                return DialogResult.OK;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine("Bitmap failed to save to " + saveName);
+                Trace.WriteLine("Error message: " + ex.Message);
+                return DialogResult.Cancel;
+            }
+        }
+
+        // Utility that opens a bitmap based on a file dialog
+        private DialogResult openBitmap()
+        {
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.Title = "Open";
+            openDialog.DefaultExt = "bmp";
+            openDialog.Filter = "Bitmaps|*.bmp";
+            if (openDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    Bitmap tempBmp = new Bitmap(openDialog.FileName);
+                    drawingBmp.Dispose();
+                    drawingBmp = new Bitmap(tempBmp);
+                    tempBmp.Dispose();
+                    saveName = openDialog.FileName;
+                    Refresh();
+                    isUnsaved = false;
+                    Trace.WriteLine("Bitmap successfully opened from " + saveName);
+                    this.Text = "CST 238 Drawing - " + saveName;
+                    return DialogResult.OK;
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine("Bitmap failed to open from " + saveName);
+                    Trace.WriteLine("Error message: " + ex.Message);
+                    return DialogResult.Cancel;
+                }
+
+            }
+            return DialogResult.Cancel;
+        }
+
         // Tool selection options
         private void rectangleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingTool = new RectangleTool();
             checkOnlyOne(toolToolStripMenuItem, rectangleToolStripMenuItem);
         }
+
         private void ellipseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingTool = new EllipseTool();
             checkOnlyOne(toolToolStripMenuItem, ellipseToolStripMenuItem);
         }
+
         private void lineToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingTool = new LineTool();
@@ -157,25 +265,81 @@ namespace Assignment1
             drawingBrush = Brushes.Black;
             checkOnlyOne(colorToolStripMenuItem, blackToolStripMenuItem);
         }
+
         private void whiteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingBrush = Brushes.White;
             checkOnlyOne(colorToolStripMenuItem, whiteToolStripMenuItem);
         }
+
         private void redToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingBrush = Brushes.Red;
             checkOnlyOne(colorToolStripMenuItem, redToolStripMenuItem);
         }
+
         private void blueToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingBrush = Brushes.Blue;
             checkOnlyOne(colorToolStripMenuItem, blueToolStripMenuItem);
         }
+
         private void greenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingBrush = Brushes.Green;
             checkOnlyOne(colorToolStripMenuItem, greenToolStripMenuItem);
+        }
+
+        // File menu options
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (isUnsaved)
+            {
+                if (saveWorkMessage("Save before opening new file?") == DialogResult.Cancel)
+                    return;
+            }
+
+            saveName = null;
+            isUnsaved = false;
+            drawingBmp.Dispose();
+            drawingBmp = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
+            using (Graphics g = Graphics.FromImage(drawingBmp))
+            {
+                g.Clear(Color.White);
+            }
+            Refresh();
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (isUnsaved)
+            {
+                if (saveWorkMessage("Save before opening new file?") == DialogResult.Cancel)
+                    return;
+            }
+
+            openBitmap();
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (isUnsaved)
+            {
+                if (saveName == null)
+                    saveAs();
+                else
+                    saveBitmap();
+            }
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveAs();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
         }
 
         // When clicked and dragged, resizes the bitmap along with the window
@@ -189,6 +353,12 @@ namespace Assignment1
             }
             drawingBmp.Dispose();
             drawingBmp = tempBmp;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (saveWorkMessage("Save your bitmap before closing?") == DialogResult.Cancel)
+                e.Cancel = true;
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
