@@ -111,7 +111,7 @@ namespace Assignment1
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
-            Trace.WriteLine("Mouse moved " + e.X + ", " + e.Y);
+            //Trace.WriteLine("Mouse moved " + e.X + ", " + e.Y);
 
             if (userIsDrawing)
             {
@@ -173,7 +173,7 @@ namespace Assignment1
         private DialogResult saveAs()
         {
             SaveFileDialog saveDialog = new SaveFileDialog();
-            saveDialog.Title = "Save Your Work";
+            saveDialog.Title = "Save As";
             saveDialog.DefaultExt = "bmp";
             saveDialog.Filter = "Bitmaps|*.bmp|All files|*.*";
             if (saveDialog.ShowDialog() == DialogResult.OK)
@@ -189,6 +189,7 @@ namespace Assignment1
         {
             try
             {
+                Trace.WriteLine(saveName);
                 drawingBmp.Save(saveName, ImageFormat.Bmp);
                 isUnsaved = false;
                 Trace.WriteLine("Bitmap successfully saved to " + saveName);
@@ -201,6 +202,39 @@ namespace Assignment1
                 Trace.WriteLine("Error message: " + ex.Message);
                 return DialogResult.Cancel;
             }
+        }
+
+        // Utility that opens a bitmap based on a file dialog
+        private DialogResult openBitmap()
+        {
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.Title = "Open";
+            openDialog.DefaultExt = "bmp";
+            openDialog.Filter = "Bitmaps|*.bmp";
+            if (openDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    Bitmap tempBmp = new Bitmap(openDialog.FileName);
+                    drawingBmp.Dispose();
+                    drawingBmp = new Bitmap(tempBmp);
+                    tempBmp.Dispose();
+                    saveName = openDialog.FileName;
+                    Refresh();
+                    isUnsaved = false;
+                    Trace.WriteLine("Bitmap successfully opened from " + saveName);
+                    this.Text = "CST 238 Drawing - " + saveName;
+                    return DialogResult.OK;
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine("Bitmap failed to open from " + saveName);
+                    Trace.WriteLine("Error message: " + ex.Message);
+                    return DialogResult.Cancel;
+                }
+
+            }
+            return DialogResult.Cancel;
         }
 
         // Tool selection options
@@ -268,11 +302,18 @@ namespace Assignment1
             {
                 g.Clear(Color.White);
             }
+            Refresh();
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (isUnsaved)
+            {
+                if (saveWorkMessage("Save before opening new file?") == DialogResult.Cancel)
+                    return;
+            }
+
+            openBitmap();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
