@@ -165,10 +165,17 @@ namespace Assignment1
             drawingBrush = Brushes.Green;
         }
 
-        // When clicked and dragged, resizes the bitmap along with the wondow
+        // When clicked and dragged, resizes the bitmap along with the window
         private void Form1_ClientSizeChanged(object sender, EventArgs e)
         {
-            drawingBmp = new Bitmap(drawingBmp, this.ClientSize);
+            Bitmap tempBmp = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
+            using (Graphics g = Graphics.FromImage(tempBmp))
+            {
+                g.Clear(Color.White);
+                g.DrawImageUnscaled(drawingBmp, 0, 0);
+            }
+            drawingBmp.Dispose();
+            drawingBmp = tempBmp;
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
