@@ -75,8 +75,10 @@ namespace Assignment1
             drawingBrush = Brushes.Black;
 
             drawingBmp = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
-            Graphics g = Graphics.FromImage(drawingBmp);
-            g.Clear(Color.White);
+            using (Graphics g = Graphics.FromImage(drawingBmp))
+            {
+                g.Clear(Color.White);
+            }
 
             userIsDrawing = false;
             p1 = new Point(0, 0);
@@ -120,8 +122,10 @@ namespace Assignment1
                 p2 = new Point(e.X, e.Y);
 
                 // Draw onto the bitmap permanently
-                Graphics g = Graphics.FromImage(drawingBmp);
-                drawingTool.Draw(g, drawingBrush, p1, p2);
+                using (Graphics g = Graphics.FromImage(drawingBmp))
+                {
+                    drawingTool.Draw(g, drawingBrush, p1, p2);
+                }
             }
         }
 
@@ -159,6 +163,12 @@ namespace Assignment1
         private void greenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingBrush = Brushes.Green;
+        }
+
+        // When clicked and dragged, resizes the bitmap along with the wondow
+        private void Form1_ClientSizeChanged(object sender, EventArgs e)
+        {
+            drawingBmp = new Bitmap(drawingBmp, this.ClientSize);
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
