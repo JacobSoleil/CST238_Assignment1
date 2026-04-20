@@ -140,6 +140,21 @@ namespace Assignment1
             }
         }
 
+        private void rectangleToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            drawingTool = new RectangleTool();
+        }
+
+        private void ellipseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            drawingTool = new EllipseTool();
+        }
+
+        private void lineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            drawingTool = new LineTool();
+        }
+
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             // Draw the bitmap onto the screen
