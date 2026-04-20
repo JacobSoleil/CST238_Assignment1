@@ -38,17 +38,22 @@ namespace Assignment1
             {
                 int x = Math.Min(p1.X, p2.X);
                 int y = Math.Min(p1.Y, p2.Y);
-                int w = Math.Max(p1.X, p2.X);
-                int h = Math.Max(p1.Y, p2.Y);
+                int w = Math.Abs(p2.X - p1.X);
+                int h = Math.Abs(p2.Y - p1.Y);
 
-                throw new NotImplementedException();
+                g.FillRectangle(drawingBrush, x, y, w, h);
             }
         }
-        private class ElipseTool : Tool
+        private class EllipseTool : Tool
         {
             public override void Draw(Graphics g, Brush drawingBrush, Point p1, Point p2)
             {
-                throw new NotImplementedException();
+                int x = Math.Min(p1.X, p2.X);
+                int y = Math.Min(p1.Y, p2.Y);
+                int w = Math.Abs(p2.X - p1.X);
+                int h = Math.Abs(p2.Y - p1.Y);
+
+                g.FillEllipse(drawingBrush, x, y, w, h);
             }
         }
 
@@ -66,9 +71,13 @@ namespace Assignment1
         {
             InitializeComponent();
 
-            drawingTool = new LineTool();   // Default drawing behavior is a black line
+            drawingTool = new RectangleTool();   // Default drawing behavior is a black line
             drawingBrush = Brushes.Black;
+
             drawingBmp = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
+            Graphics g = Graphics.FromImage(drawingBmp);
+            g.Clear(Color.White);
+
             userIsDrawing = false;
             p1 = new Point(0, 0);
             p2 = new Point(0, 0);
@@ -120,12 +129,15 @@ namespace Assignment1
         {
             Trace.WriteLine("Mouse released at " + e.X + ", " + e.Y);
 
-            userIsDrawing = false;
-            p2 = new Point(e.X, e.Y);
+            if (userIsDrawing)
+            {
+                userIsDrawing = false;
+                p2 = new Point(e.X, e.Y);
 
-            // Draw onto the bitmap
-            Graphics g = Graphics.FromImage(drawingBmp);
-            drawingTool.Draw(g, drawingBrush, p1, p2);
+                // Draw onto the bitmap permanently
+                Graphics g = Graphics.FromImage(drawingBmp);
+                drawingTool.Draw(g, drawingBrush, p1, p2);
+            }
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
