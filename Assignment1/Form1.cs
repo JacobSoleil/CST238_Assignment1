@@ -161,7 +161,10 @@ namespace Assignment1
                 case DialogResult.Cancel:
                     return DialogResult.Cancel;
                 case DialogResult.Yes:
-                    return saveAs();
+                    if (saveName == null)
+                        return saveAs();
+                    else
+                        return saveBitmap();
                 case DialogResult.No:
                     return DialogResult.No;
                 default:
@@ -296,6 +299,8 @@ namespace Assignment1
                     return;
             }
 
+            saveName = null;
+            isUnsaved = false;
             drawingBmp.Dispose();
             drawingBmp = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
             using (Graphics g = Graphics.FromImage(drawingBmp))
@@ -334,7 +339,7 @@ namespace Assignment1
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            Close();
         }
 
         // When clicked and dragged, resizes the bitmap along with the window
@@ -348,6 +353,12 @@ namespace Assignment1
             }
             drawingBmp.Dispose();
             drawingBmp = tempBmp;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (saveWorkMessage("Save your bitmap before closing?") == DialogResult.Cancel)
+                e.Cancel = true;
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
