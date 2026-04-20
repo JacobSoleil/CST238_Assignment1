@@ -129,40 +129,57 @@ namespace Assignment1
             }
         }
 
+        // Utility that ensures only one item is checked on a drop-down list
+        private void checkOnlyOne(ToolStripMenuItem parentMenu, ToolStripMenuItem checkedItem)
+        {
+            foreach (ToolStripMenuItem toolItem in parentMenu.DropDownItems)
+            {
+                toolItem.Checked = toolItem == checkedItem;
+            }
+        }
+
         // Tool selection options
-        private void rectangleToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void rectangleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingTool = new RectangleTool();
+            checkOnlyOne(toolToolStripMenuItem, rectangleToolStripMenuItem);
         }
         private void ellipseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingTool = new EllipseTool();
+            checkOnlyOne(toolToolStripMenuItem, ellipseToolStripMenuItem);
         }
         private void lineToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingTool = new LineTool();
+            checkOnlyOne(toolToolStripMenuItem, lineToolStripMenuItem);
         }
 
         // Color selection options
-        private void blackToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void blackToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingBrush = Brushes.Black;
+            checkOnlyOne(colorToolStripMenuItem, blackToolStripMenuItem);
         }
         private void whiteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingBrush = Brushes.White;
+            checkOnlyOne(colorToolStripMenuItem, whiteToolStripMenuItem);
         }
         private void redToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingBrush = Brushes.Red;
+            checkOnlyOne(colorToolStripMenuItem, redToolStripMenuItem);
         }
         private void blueToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingBrush = Brushes.Blue;
+            checkOnlyOne(colorToolStripMenuItem, blueToolStripMenuItem);
         }
         private void greenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingBrush = Brushes.Green;
+            checkOnlyOne(colorToolStripMenuItem, greenToolStripMenuItem);
         }
 
         // When clicked and dragged, resizes the bitmap along with the window
