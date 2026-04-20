@@ -59,7 +59,7 @@ namespace Assignment1
 
         private bool userIsDrawing; // whether user is currently dragging the mouse
 
-        private Point p1, p2;       // start and end point for drawing
+        private Point p1, p2;       // start and end point for drawin
 
         public Form1()
         {
