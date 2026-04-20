@@ -88,21 +88,6 @@ namespace Assignment1
 
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void whiteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void rectangleToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
             Trace.WriteLine("Mouse clicked at "+e.X+", "+e.Y);
@@ -140,19 +125,40 @@ namespace Assignment1
             }
         }
 
+        // Tool selection options
         private void rectangleToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             drawingTool = new RectangleTool();
         }
-
         private void ellipseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingTool = new EllipseTool();
         }
-
         private void lineToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingTool = new LineTool();
+        }
+
+        // Color selection options
+        private void blackToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            drawingBrush = Brushes.Black;
+        }
+        private void whiteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            drawingBrush = Brushes.White;
+        }
+        private void redToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            drawingBrush = Brushes.Red;
+        }
+        private void blueToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            drawingBrush = Brushes.Blue;
+        }
+        private void greenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            drawingBrush = Brushes.Green;
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
