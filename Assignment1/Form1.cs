@@ -58,14 +58,10 @@ namespace Assignment1
         }
 
         private Tool drawingTool;   // Currently-selected drawing tool
-
         private Brush drawingBrush; // Currently-selected brush color (converted to pen in Linetool)
-        
         private Bitmap drawingBmp;  // in-memory representation of canvas
-
         private bool userIsDrawing; // whether user is currently dragging the mouse
-
-        private Point p1, p2;       // start and end point for drawin
+        private Point p1, p2;       // start and end point for drawing
 
         public Form1()
         {
