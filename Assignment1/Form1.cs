@@ -77,6 +77,7 @@ namespace Assignment1
         public Form1()
         {
             InitializeComponent();
+            this.DoubleBuffered = true;
 
             // Default drawing behavior is a black line
             drawingTool = new RectangleTool();
