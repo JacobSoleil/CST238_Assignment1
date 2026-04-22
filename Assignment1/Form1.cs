@@ -35,10 +35,12 @@ namespace Assignment1
                 drawingPen.Dispose();
             }
         }
+
         private class RectangleTool : Tool
         {
             public override void Draw(Graphics g, Brush drawingBrush, Point p1, Point p2)
             {
+                // Set up drawing dimensions to follow the cursor
                 int x = Math.Min(p1.X, p2.X);
                 int y = Math.Min(p1.Y, p2.Y);
                 int w = Math.Abs(p2.X - p1.X);
@@ -47,10 +49,12 @@ namespace Assignment1
                 g.FillRectangle(drawingBrush, x, y, w, h);
             }
         }
+
         private class EllipseTool : Tool
         {
             public override void Draw(Graphics g, Brush drawingBrush, Point p1, Point p2)
             {
+                // Set up drawing dimensions to follow the cursor
                 int x = Math.Min(p1.X, p2.X);
                 int y = Math.Min(p1.Y, p2.Y);
                 int w = Math.Abs(p2.X - p1.X);
@@ -74,18 +78,22 @@ namespace Assignment1
         {
             InitializeComponent();
 
-            drawingTool = new RectangleTool();   // Default drawing behavior is a black line
+            // Default drawing behavior is a black line
+            drawingTool = new RectangleTool();
             drawingBrush = Brushes.Black;
 
+            // Initialize bitmap and fill it with white
             drawingBmp = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
-            using (Graphics g = Graphics.FromImage(drawingBmp))
+            using (Graphics g = Graphics.FromImage(drawingBmp)) 
             {
                 g.Clear(Color.White);
             }
 
-            this.MaximumSize = new Size(800, 500);  // Set to avoid invalid sizes
+            // Set to avoid invalid sizes
+            this.MaximumSize = new Size(800, 500);
             this.MinimumSize = new Size(50, 50);
 
+            // Initial states of state variables
             userIsDrawing = false;
             p1 = new Point(0, 0);
             p2 = new Point(0, 0);
@@ -99,8 +107,10 @@ namespace Assignment1
 
         }
 
+        // Mouse events
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
+            // Trace code
             Trace.WriteLine("Mouse clicked at "+e.X+", "+e.Y);
 
             // Beginning to draw, set initial point & reset point 2
@@ -111,7 +121,8 @@ namespace Assignment1
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
-            //Trace.WriteLine("Mouse moved " + e.X + ", " + e.Y);
+            // Trace code
+            Trace.WriteLine("Mouse moved " + e.X + ", " + e.Y);
 
             if (userIsDrawing)
             {
@@ -127,6 +138,7 @@ namespace Assignment1
 
             if (userIsDrawing)
             {
+                // Set vars based on new position
                 userIsDrawing = false;
                 p2 = new Point(e.X, e.Y);
 
@@ -175,15 +187,19 @@ namespace Assignment1
         // Utility that gets a new file name before saving
         private DialogResult saveAs()
         {
+            // Set up save dialog
             SaveFileDialog saveDialog = new SaveFileDialog();
             saveDialog.Title = "Save As";
             saveDialog.DefaultExt = "bmp";
             saveDialog.Filter = "Bitmaps|*.bmp|All files|*.*";
+
+            // If user selected a file, use it to save the bitmap
             if (saveDialog.ShowDialog() == DialogResult.OK)
             {
                 saveName = saveDialog.FileName;
                 return saveBitmap();
             }
+
             return DialogResult.Cancel;
         }
 
@@ -192,17 +208,22 @@ namespace Assignment1
         {
             try
             {
-                Trace.WriteLine(saveName);
+                // Save using string filename
                 drawingBmp.Save(saveName, ImageFormat.Bmp);
                 isUnsaved = false;
+
+                // If successful, write to trace and change form title
                 Trace.WriteLine("Bitmap successfully saved to " + saveName);
                 this.Text = "CST 238 Drawing - " + saveName;
+
                 return DialogResult.OK;
             }
             catch (Exception ex)
             {
+                // If unsuccessful, write as much to trace w/ error message
                 Trace.WriteLine("Bitmap failed to save to " + saveName);
                 Trace.WriteLine("Error message: " + ex.Message);
+
                 return DialogResult.Cancel;
             }
         }
@@ -210,37 +231,46 @@ namespace Assignment1
         // Utility that opens a bitmap based on a file dialog
         private DialogResult openBitmap()
         {
+            // Set up open dialog
             OpenFileDialog openDialog = new OpenFileDialog();
             openDialog.Title = "Open";
             openDialog.DefaultExt = "bmp";
             openDialog.Filter = "Bitmaps|*.bmp";
+
+            // If user selected a file, open it
             if (openDialog.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    Bitmap tempBmp = new Bitmap(openDialog.FileName);
-                    drawingBmp.Dispose();
-                    drawingBmp = new Bitmap(tempBmp);
-                    tempBmp.Dispose();
+                    // Open using filestream instead of string to avoid access errors
+                    System.IO.FileStream openStream = System.IO.File.OpenRead(openDialog.FileName);
+                    drawingBmp = new Bitmap(openStream);
+
+                    // Set vars
                     saveName = openDialog.FileName;
-                    Refresh();
                     isUnsaved = false;
+
+                    Refresh();
+
+                    // If successful, write to trace and change form title
                     Trace.WriteLine("Bitmap successfully opened from " + saveName);
                     this.Text = "CST 238 Drawing - " + saveName;
+
                     return DialogResult.OK;
                 }
                 catch (Exception ex)
                 {
+                    // If unsuccessful, write as much to trace w/ error message
                     Trace.WriteLine("Bitmap failed to open from " + saveName);
                     Trace.WriteLine("Error message: " + ex.Message);
+
                     return DialogResult.Cancel;
                 }
-
             }
             return DialogResult.Cancel;
         }
 
-        // Tool selection options
+        // Tool selection menu item click events
         private void rectangleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingTool = new RectangleTool();
@@ -259,7 +289,7 @@ namespace Assignment1
             checkOnlyOne(toolToolStripMenuItem, lineToolStripMenuItem);
         }
 
-        // Color selection options
+        // Color selection menu item click events
         private void blackToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawingBrush = Brushes.Black;
@@ -290,7 +320,7 @@ namespace Assignment1
             checkOnlyOne(colorToolStripMenuItem, greenToolStripMenuItem);
         }
 
-        // File menu options
+        // File menu item click events
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (isUnsaved)
@@ -299,6 +329,7 @@ namespace Assignment1
                     return;
             }
 
+            // Reset variables and bitmap for new file
             saveName = null;
             isUnsaved = false;
             drawingBmp.Dispose();
