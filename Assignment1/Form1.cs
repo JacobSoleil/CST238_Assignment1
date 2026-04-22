@@ -245,6 +245,7 @@ namespace Assignment1
                     // Open using filestream instead of string to avoid access errors
                     System.IO.FileStream openStream = System.IO.File.OpenRead(openDialog.FileName);
                     drawingBmp = new Bitmap(openStream);
+                    openStream.Close();
 
                     // Set vars
                     saveName = openDialog.FileName;
